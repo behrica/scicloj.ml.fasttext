@@ -1,1 +1,1 @@
-fasttext model for metamorph.ml and scicloj.ml
+fasttext text classification model for metamorph.ml
