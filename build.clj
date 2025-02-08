@@ -62,6 +62,7 @@
 
  (defn deploy "Deploy the JAR to Clojars." [opts]
       (-> opts
+          (bb/clean)
           (jar)
           (assoc :lib lib :version version)
           
