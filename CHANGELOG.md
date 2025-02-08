@@ -1,6 +1,11 @@
 # Change Log
 
-## unreleased
+## 0.2
+- renamed to fasttext
+- model renamed to :djl/fasttext
+- not using anymore clj-djl
+- upgraded to metamorph.ml 1.0
+
 
 ## 0.1.2
 - make fastext model work in `evaluate-pipelines`

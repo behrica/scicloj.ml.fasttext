@@ -1,0 +1,1 @@
+fasttext model for metamorph.ml and scicloj.ml
