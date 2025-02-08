@@ -55,15 +55,15 @@
 
 (defn install "Install the JAR locally." [opts]
   (-> opts
-      (assoc :lib lib :version version)
       (jar)
+      (assoc :lib lib :version version)
       (bb/install)))
 
 
  (defn deploy "Deploy the JAR to Clojars." [opts]
       (-> opts
           (bb/clean)
-          (jar)
+          install
           (assoc :lib lib :version version)
           
           (bb/deploy)))
