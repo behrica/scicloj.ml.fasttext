@@ -59,3 +59,9 @@
       (jar)
       (bb/install)))
 
+
+ (defn deploy "Deploy the JAR to Clojars." [opts]
+      (-> opts
+          (assoc :lib lib :version version)
+          (jar)
+          (bb/deploy)))
