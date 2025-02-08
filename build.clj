@@ -6,7 +6,7 @@
 (def lib 'org.scicloj/scicloj.ml.clj-djl)
 ; alternatively, use MAJOR.MINOR.COMMITS:
 ;;(def version (format "0.2.%s" (b/git-count-revs nil)))
-(def version "0.1.11")
+(def version "0.1.2")
 
 (defn test "Run the tests." [opts]
   (bb/run-tests opts))

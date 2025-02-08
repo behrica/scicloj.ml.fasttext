@@ -32,12 +32,8 @@
         prob-distribution
         (ml/predict (ds/head primary) (assoc model
                                              :top-k 3))]
-    ;; (println :model-dir (io/file (-> model :model-data :model-dir)))
     (delete-files-recursively (io/file (-> model :model-data :model-dir)))
     (is (= [0.0 0.0 0.0 0.0 0.0] (prob-distribution :is.primary)))))
-
-
-
 
 
 (deftest fit-transform
@@ -68,11 +64,7 @@
     (is (= 0.0
            (-> transform-result :metamorph/data :is.primary first)))))
 
-
-
-
 (deftest fasttext-pipe
-
   (let [ pipe
         (mm/pipeline
          (dsmm/set-inference-target :is.primary)

@@ -8,40 +8,60 @@
    [tablecloth.api :as tc]
    [tech.v3.dataset :as ds]
    [tech.v3.dataset.categorical :as ds-cat]
-   [tech.v3.dataset.modelling])
+   [tech.v3.dataset.modelling]
+  [ malli.core :as m]
+   )
   (:import
-   (ai.djl.basicdataset RawDataset)
+   (ai.djl.training.dataset RawDataset)
    (ai.djl.fasttext FtModel FtTrainingConfig TrainFastText)
    (java.nio.file.attribute FileAttribute)))
 
+(defn parameter-type->malli [t]
+  (case t
+    :java.lang.String :string
+    :ai.djl.fasttext.FtTrainingConfig$FtLoss [:fn (fn [x]  (clojure.core/instance? x ai.djl.fasttext.FtTrainingConfig$FtLoss))]
+    :ai.djl.fasttext.FtTrainingMode [:fn (fn [x]  (clojure.core/instance? x ai.djl.fasttext.FtTrainingMode))]
+    t)
+  )
+
 (defn opts-docu []
-  (->>
-   (FtTrainingConfig/builder)
-   (clojure.reflect/reflect)
-   :members
-   (filter #(clojure.string/starts-with? (:name %) "opt"))
-   (map #(hash-map :name (csk/->kebab-case-keyword (clojure.string/replace (:name  %) "opt" ""))
-                   :type (first  (:parameter-types %))))))
+  (into [:map 
+         {:closed true}
+         ]
+          (->>
+           (FtTrainingConfig/builder)
+           (clojure.reflect/reflect)
+           :members
+           (filter #(clojure.string/starts-with? (:name %) "opt"))
+           (mapv
+            (fn [{:keys [name parameter-types]}]
+              (vector (keyword name)
+                      {:optional true}
+                      (parameter-type->malli
+                       (keyword (first parameter-types)))))))))
+  
+  
 
-(defn make-dataset [path]
-  (reify RawDataset
-    (getData [this] path)))
-            
 
-(defn ->fast-text-file! [ft-ds out-file]
-  (->> ft-ds
-       :fast-text
-       (clojure.string/join "\n")
-       (spit (.toFile  out-file))))
+ (defn make-dataset [path]
+   (reify RawDataset
+     (getData [this] path)))
+ 
 
-(defn ->fast-text-ds [ds label-col text-col]
+ (defn ->fast-text-file! [ft-ds out-file]
+   (->> ft-ds
+        :fast-text
+        (clojure.string/join "\n")
+        (spit (.toFile  out-file))))
 
-  (-> ds
-      (tc/add-column :fast-text (fn [ds ] (map #(str  "__label__" %2 " " %1)
+ (defn ->fast-text-ds [ds label-col text-col]
 
-                                              (get ds text-col)
-                                              (get ds label-col))))
-      (tc/select-columns :fast-text)))
+   (-> ds
+       (tc/add-column :fast-text (fn [ds ] (map #(str  "__label__" %2 " " %1)
+
+                                                (get ds text-col)
+                                                (get ds label-col))))
+       (tc/select-columns :fast-text)))
 
 
 (defn do-opts [config m]
@@ -198,3 +218,4 @@
               (assert (:model-file model) ":model-file not given in `model`")
               (assoc model :model
                      (load-ft-model (:model-file model))))})
+
