@@ -1,4 +1,4 @@
-(ns scicloj.ml.clj-djl.fasttext
+(ns scicloj.ml.fasttext
   (:require
    [camel-snake-kebab.core :as csk]
    [clojure.java.io :as io]
@@ -210,7 +210,7 @@
     (.load model-instance (.toPath (io/file path)))
     model-instance))
 
-(ml/define-model! :clj-djl/fasttext train predict
+(ml/define-model! :djl/fasttext train predict
   {:documentation {:javadoc    "https://javadoc.io/doc/ai.djl.fasttext/fasttext-engine/latest/index.html"
                    :user-guide "https://djl.ai/extensions/fasttext/"}
    :options (opts-docu)

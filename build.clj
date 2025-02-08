@@ -3,10 +3,10 @@
   (:require [clojure.tools.build.api :as b] ; for b/git-count-revs
             [org.corfield.build :as bb]))
 
-(def lib 'org.scicloj/scicloj.ml.clj-djl)
+(def lib 'org.scicloj/scicloj.ml.fasttext)
 ; alternatively, use MAJOR.MINOR.COMMITS:
 ;;(def version (format "0.2.%s" (b/git-count-revs nil)))
-(def version "0.1.2")
+(def version "0.2")
 
 (defn test "Run the tests." [opts]
   (bb/run-tests opts))

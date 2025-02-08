@@ -1,4 +1,4 @@
-(ns scicloj.ml.clj-djl.fasttext-test
+(ns scicloj.ml.fasttext-test
   (:require
    [clojure.java.io :as io]
    [clojure.test :as t :refer [deftest is]]
@@ -6,7 +6,7 @@
    [tech.v3.dataset.metamorph :as dsmm]
    [scicloj.metamorph.core :as mm]
    [scicloj.metamorph.ml.loss :as loss]
-   [scicloj.ml.clj-djl.fasttext]
+   [scicloj.ml.fasttext]
    [tech.v3.dataset :as ds]
    [tech.v3.dataset.categorical :as ds-cat]
    [tech.v3.dataset.modelling]))
@@ -28,7 +28,7 @@
         (ml/train (-> primary
                       (tech.v3.dataset/categorical->number [:is.primary] [] :int)
                       (tech.v3.dataset.modelling/set-inference-target :is.primary))
-                  {:model-type :clj-djl/fasttext})
+                  {:model-type :djl/fasttext})
         prob-distribution
         (ml/predict (ds/head primary) (assoc model
                                              :top-k 3))]
@@ -42,7 +42,7 @@
               (dsmm/set-inference-target :is.primary)
               (dsmm/categorical->number [:is.primary] [] :int)
               {:metamorph/id :model}
-              (ml/model {:model-type :clj-djl/fasttext}))
+              (ml/model {:model-type :djl/fasttext}))
 
         fit-ctx
         (mm/fit primary pipe)
@@ -58,7 +58,7 @@
     (is (some?
          (-> fit-ctx :model :model-data :model-dir)))
 
-    (is (= {"yes" 0, "no" 1, "unclear" 2}
+    (is (= {"yes" 1, "no" 0, "unclear" 2}
            (-> fit-ctx :model :target-categorical-maps :is.primary :lookup-table)))
 
     (is (= 0.0
@@ -70,7 +70,7 @@
          (dsmm/set-inference-target :is.primary)
          (dsmm/categorical->number [:is.primary] [] :int)
          {:metamorph/id :model}
-         (ml/model {:model-type :clj-djl/fasttext}))
+         (ml/model {:model-type :djl/fasttext}))
 
         result
         (ml/evaluate-pipelines [pipe]
@@ -88,7 +88,7 @@
          (dsmm/set-inference-target :label)
          (dsmm/categorical->number [:label] [] :int)
          {:metamorph/id :model}
-         (ml/model {:model-type :clj-djl/fasttext}))
+         (ml/model {:model-type :djl/fasttext}))
 
         data (ds/->dataset {:text ["green" "red" "yellow"]
                             :label ["green" "red" "yellow"]})
