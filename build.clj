@@ -65,5 +65,4 @@
           (bb/clean)
           install
           (assoc :lib lib :version version)
-          
           (bb/deploy)))
