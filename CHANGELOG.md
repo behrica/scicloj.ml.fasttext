@@ -1,5 +1,8 @@
 # Change Log
 
+## unreleased
+- bumbed versions of dependencies
+
 ## 0.2
 - renamed to fasttext
 - model renamed to :djl/fasttext
